@@ -8,6 +8,7 @@
 #include <numeric>
 
 #include <catch2/catch_test_macros.hpp>
+#include <iostream>
 
 template<class T>
 T searchForward(std::list<int> &contiList, T beginIter, T endIter) {
@@ -46,24 +47,15 @@ int maxSequence(const std::vector<int> &arr) {
     if (arr.empty()) {
         return 0;
     }
-    auto maxIter = std::max_element(std::cbegin(arr), std::cend(arr));
-    if (*maxIter <= 0) {
+    if (*std::max_element(std::cbegin(arr), std::cend(arr)) < 0)
         return 0;
+    std::vector<int> solCandidates{};
+    for (auto curIter = std::begin(arr); curIter != std::cend(arr); ++curIter) {
+        solCandidates.push_back(searchFromCenter(curIter, std::cbegin(arr), std::cend(arr)));
     }
-    std::list<int> contiList{};
-    contiList.push_back(*maxIter);
-    auto curForwardIter = std::next(maxIter);
-    while (curForwardIter != std::cend(arr)) {
-        curForwardIter = searchForward(contiList, curForwardIter, std::cend(arr));
-    }
-    auto curBackwardIter = std::reverse_iterator(
-            maxIter); // the reverse iterator will return the previous element of normal iterator
-    while (curBackwardIter != std::crend(arr)) {
-        curBackwardIter = searchForward(contiList, curBackwardIter, std::crend(arr));
-    }
-    return std::accumulate(std::cbegin(contiList), std::cend(contiList), 0);
+    return *std::max_element(std::cbegin(solCandidates), std::cend(solCandidates));
 }
 
 TEST_CASE("test_max_sum") {
-    REQUIRE(maxSequence({-1, 1, 1, 4, 1, 1, -1}) == 8);
+    REQUIRE(maxSequence({4, 1, 1, 4, 1, 1, -1, -1, 1, 1, 4, -1, 1, 2}) == 18);
 }
