@@ -14,6 +14,70 @@ struct MultipliedNumber {
   int multiplier;
 };
 
+class ParseIntUtil {
+public:
+  ParseIntUtil() { initializeBelowHundreds(); }
+
+  int processSection(const std::string &str) {
+    int number = 0;
+    std::string curString{};
+    std::istringstream inputStream{str};
+    while (!inputStream.eof()) {
+      inputStream >> curString;
+      if (curString != "and") {
+        auto optionalDigitIter = digits.find(curString);
+        if (optionalDigitIter != std::end(digits)) {
+          number += optionalDigitIter->second;
+        } else {
+          if (curString == "hundred") {
+            number *= 100;
+          } else {
+            auto optionalBelowHundredIter = belowHundreds.find(curString);
+            if (optionalBelowHundredIter != std::end(belowHundreds)) {
+              number += optionalBelowHundredIter->second;
+            }
+          }
+        }
+      }
+    }
+    return number;
+  }
+
+  void initializeBelowHundreds() {
+    std::unordered_map<std::string, int> tens{
+        {"", 0},        {"twenty", 2}, {"thirty", 3},
+        {"forty", 4},   {"fifty", 5},  {"sixty", 6},
+        {"seventy", 7}, {"eighty", 8}, {"ninety", 9},
+    };
+    std::unordered_map<std::string, int> digits{
+        {"", 0},     {"one", 1}, {"two", 2},   {"three", 3}, {"four", 4},
+        {"five", 5}, {"six", 6}, {"seven", 7}, {"eight", 8}, {"nine", 9}};
+
+    for (const auto &ten : tens) {
+      for (const auto &digit : digits) {
+        if (!ten.first.empty() && !digit.first.empty()) {
+          belowHundreds[ten.first + "-" + digit.first] =
+              ten.second * 10 + digit.second;
+        } else {
+          belowHundreds[ten.first + digit.first] =
+              ten.second * 10 + digit.second;
+        }
+      }
+    }
+  }
+
+private:
+  std::unordered_map<std::string, int> digits{
+      {"one", 1}, {"two", 2},   {"three", 3}, {"four", 4}, {"five", 5},
+      {"six", 6}, {"seven", 7}, {"eight", 8}, {"nine", 9}};
+
+  std::unordered_map<std::string, int> belowHundreds{
+      {"ten", 10},      {"eleven", 11},   {"twelve", 12},  {"thirteen", 13},
+      {"fourteen", 14}, {"fifteen", 15},  {"sixteen", 16}, {"seventeen", 17},
+      {"eighteen", 18}, {"nineteen", 19},
+  };
+};
+
 std::unordered_map<std::string, int> constructBelowHundreds() {
   std::unordered_map<std::string, int> res{
       {"ten", 10},      {"eleven", 11},   {"twelve", 12},  {"thirteen", 13},
