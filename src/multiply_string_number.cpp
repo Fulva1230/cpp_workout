@@ -15,12 +15,18 @@ class BigInt {
 public:
   using ContainerType = vector<int>;
   explicit BigInt(const string &init) {
-    char buf[2]{};
-    std::for_each(std::rbegin(init), std::rend(init),
-                  [&buf, this](const char e) {
-                    buf[0] = e;
-                    internalNumbers.push_back(std::atoi(buf));
-                  });
+    char buf[3]{};
+    auto curIter = std::rbegin(init);
+    auto endIter = std::rend(init);
+    for (; curIter != endIter; ++curIter) {
+      buf[1] = *curIter;
+      if (std::next(curIter) != endIter) {
+        buf[0] = *(++curIter);
+      } else {
+        buf[0] = ' ';
+      }
+      internalNumbers.push_back(std::atoi(buf));
+    }
   }
 
   BigInt() = default;
@@ -44,8 +50,8 @@ public:
     auto outputIter = std::begin(output.internalNumbers);
     auto outputEndIter = std::cend(output.internalNumbers);
     for (; std::next(outputIter) != outputEndIter; ++outputIter) {
-      *std::next(outputIter) += *outputIter / 10;
-      *outputIter = *outputIter % 10;
+      *std::next(outputIter) += *outputIter / 100;
+      *outputIter = *outputIter % 100;
     }
     return output;
   }
@@ -53,7 +59,12 @@ public:
   explicit operator string() {
     std::ostringstream output{};
     std::for_each(std::crbegin(internalNumbers), std::crend(internalNumbers),
-                  [&output](int digit) { output << digit; });
+                  [&output](int digit) {
+                    if (digit < 10) {
+                      output << '0';
+                    }
+                    output << digit;
+                  });
     std::string outputStr{output.str()};
 
     auto curIter = std::cbegin(outputStr);
@@ -81,6 +92,10 @@ TEST_CASE("test multiply string") {
   BigInt a("50");
   BigInt b("3");
   REQUIRE(static_cast<string>(a * b) == "150");
+
+  BigInt e("99");
+  BigInt f("300");
+  REQUIRE(static_cast<string>(e * f) == "29700");
 
   BigInt c("234232");
   BigInt d("2123134");
