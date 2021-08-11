@@ -31,6 +31,25 @@ public:
 
   BigInt() = default;
 
+  BigInt operator+(const BigInt &another) const {
+    auto thisIter = std::begin(internalNumbers);
+    const auto thisEndIter = std::cend(internalNumbers);
+    auto anotherIter = std::begin(another.internalNumbers);
+    const auto anotherEndIter = std::cend(another.internalNumbers);
+    BigInt output{};
+    bool thisIterAvailable = thisIter != thisEndIter;
+    bool anotherIterAvailable = anotherIter != anotherEndIter;
+    while (thisIterAvailable || anotherIterAvailable) {
+      int lhs = thisIterAvailable ? *(thisIter++) : 0;
+      int rhs = anotherIterAvailable ? *(anotherIter++) : 0;
+      output.internalNumbers.push_back(lhs + rhs);
+      thisIterAvailable = thisIter != thisEndIter;
+      anotherIterAvailable = anotherIter != anotherEndIter;
+    }
+    output.carry();
+    return output;
+  }
+
   BigInt operator*(const BigInt &another) const {
     auto thisIter = std::begin(internalNumbers);
     const auto thisEndIter = std::cend(internalNumbers);
@@ -47,12 +66,7 @@ public:
             (*thisIter) * (*anotherIter);
       }
     }
-    auto outputIter = std::begin(output.internalNumbers);
-    auto outputEndIter = std::cend(output.internalNumbers);
-    for (; std::next(outputIter) != outputEndIter; ++outputIter) {
-      *std::next(outputIter) += *outputIter / 100;
-      *outputIter = *outputIter % 100;
-    }
+    output.carry();
     return output;
   }
 
@@ -77,6 +91,17 @@ public:
   }
 
 private:
+  void carry() {
+    auto curIter = std::begin(internalNumbers);
+    auto endIter = std::cend(internalNumbers);
+    if (curIter != endIter) {
+      for (; std::next(curIter) != endIter; ++curIter) {
+        *std::next(curIter) += *curIter / 100;
+        *curIter = *curIter % 100;
+      }
+    }
+  };
+
   void procCarry() const {};
   ContainerType internalNumbers{};
 };
@@ -86,6 +111,12 @@ string multiply(string a, string b) {
   BigInt ai{a};
   BigInt bi{b};
   return static_cast<string>(ai * bi);
+}
+
+std::string sum_strings(const std::string &a, const std::string &b) {
+  BigInt ai{a};
+  BigInt bi{b};
+  return static_cast<string>(ai + bi);
 }
 
 TEST_CASE("test multiply string") {
@@ -100,4 +131,8 @@ TEST_CASE("test multiply string") {
   BigInt c("234232");
   BigInt d("2123134");
   REQUIRE(static_cast<string>(c * d) == "497305923088");
+
+  BigInt g("123121");
+  BigInt h("0000234345554");
+  REQUIRE(static_cast<string>(g + h) == "234468675");
 }
