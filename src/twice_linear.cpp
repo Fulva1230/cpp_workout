@@ -12,6 +12,7 @@ public:
   static int dblLinear(int n) {
     int sol = 0;
     std::vector<int> unfinished_min_heap{1};
+    unfinished_min_heap.reserve(2 * n);
     int previous{};
     for (int i = 0; i < n + 1; ++i) {
       std::pop_heap(std::begin(unfinished_min_heap),
