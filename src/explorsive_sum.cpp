@@ -11,10 +11,12 @@ using ull = unsigned long long;
 
 std::unordered_map<unsigned int, std::unordered_map<unsigned int, ull>> cache{};
 
+int i = 2;
+
 ull exp_sum(unsigned int n) {
   cache[0][0] = 1;
   cache[1][0] = 1;
-  for (int i = 2; i <= n; ++i) {
+  for (; i <= n; ++i) {
     for (int j = 0; j < i; ++j) {
       cache[i][j] = 1;
       for (int q = 1; q <= (i / 2) - j; ++q) {
@@ -36,4 +38,5 @@ TEST_CASE("exp_sum") {
   CHECK(exp_sum(20) == 627);
   CHECK(exp_sum(100) == 190569292);
   CHECK(exp_sum(230) == 47826239745920);
+  CHECK(exp_sum(408) == 10990600063775926994LL);
 }
