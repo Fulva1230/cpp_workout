@@ -12,7 +12,7 @@ double pi_compute(double ratio) {
   double v2i = -1;
   double v1f = 0;
   double v2f = 0;
-  int count = 0;
+  unsigned long long count = 0;
   while (v2i < v1i) {
     count += 2;
     v1f = (m1 - m2) / (m1 + m2) * v1i + 2 * m2 / (m1 + m2) * v2i;
