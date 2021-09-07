@@ -1,0 +1,5 @@
+project(drafting)
+
+add_executable(test_for_constness test_for_constness.cpp)
+target_link_libraries(test_for_constness gtest_main)
+gtest_discover_tests(test_for_constness)

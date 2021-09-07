@@ -1,0 +1,8 @@
+project(break_the_pieces)
+
+add_library(break_the_pieces STATIC break_the_pieces.cpp)
+target_include_directories(break_the_pieces PUBLIC .)
+
+add_executable(break_the_pieces_test test.cpp)
+target_link_libraries(break_the_pieces_test break_the_pieces gtest_main)
+gtest_discover_tests(break_the_pieces_test)

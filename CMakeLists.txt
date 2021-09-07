@@ -15,7 +15,17 @@ list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
 include(CTest)
 include(Catch)
 
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG release-1.11.0
+)
+FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
+
+add_subdirectory(break_the_pieces)
+add_subdirectory(drafting)
+
 add_executable(cpp_workout src/stray_number.cpp src/roman_decoder.cpp src/two_sum.cpp src/camel_string.cpp src/score_a_dice.cpp src/pascal_triangle.cpp src/max_sum.cpp src/scarmblies_string.cpp src/best_travel.cpp src/premutation_string.cpp src/parse_int.cpp src/multiply_string_number.cpp src/string_mix.cpp src/twice_linear.cpp src/explorsive_sum.cpp src/observed_pin.cpp src/multiplication_of_three.cpp src/sudoku_validator.cpp src/pi_comp.cpp)
 target_include_directories(cpp_workout PUBLIC include)
 target_link_libraries(cpp_workout Catch2::Catch2WithMain)
-catch_discover_tests(cpp_workout)
