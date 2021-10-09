@@ -1,0 +1,7 @@
+project(magic_compare)
+
+add_library(magic_compare magic_compare.cpp)
+target_include_directories(magic_compare PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+
+add_executable(test_magic_compare test_magic_compare.cpp)
+target_link_libraries(test_magic_compare magic_compare gtest_main)
