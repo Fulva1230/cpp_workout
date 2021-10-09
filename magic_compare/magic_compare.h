@@ -47,6 +47,14 @@ public:
     return *this;
   }
 
+  template <class RhsType> MagicCompare<T> operator*(RhsType rhs) {
+    MagicCompare<T> result = rhs;
+    result.comparedRes = this->comparedRes;
+    result.rvalue = this->rvalue * result.rvalue;
+    result.lvalue = this->lvalue * result.lvalue;
+    return result;
+  }
+
   MagicCompare<T> operator++(int) {
     MagicCompare<T> res = *this;
     *this += 1;
@@ -64,6 +72,8 @@ public:
   }
 
   operator bool() { return comparedRes; }
+
+  operator T() { return lvalue; }
 
   bool comparedRes = true;
   T lvalue;
@@ -102,6 +112,11 @@ template <class RhsType>
 MagicCompare<RhsType> operator!=(RhsType lhs,
                                  const MagicCompare<RhsType> &rhs) {
   return MagicCompare<RhsType>(lhs) != rhs;
+}
+
+template <class RhsType>
+MagicCompare<RhsType> operator*(RhsType lhs, const MagicCompare<RhsType> &rhs) {
+  return MagicCompare<RhsType>(lhs) * rhs;
 }
 
 #endif // CPP_WORKOUT_MAGIC_COMPARE_MAGIC_COMPARE_H_

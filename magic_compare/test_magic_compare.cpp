@@ -25,5 +25,14 @@ TEST(TestMagiceCompare, Basic) {
   EXPECT_TRUE(static_cast<bool>(3.0 <= n));
   EXPECT_FALSE(static_cast<bool>(10.0 <= n));
 
-  sin(n);
+  MagicCompare<int> i{0};
+  std::vector<int> interval;
+  for (; i < 5; ++i) {
+    if (5 < (i * i) < 17) {
+      /* will output 3 and 4. */
+      interval.push_back(i);
+    }
+  }
+  EXPECT_EQ(interval[0], 3);
+  EXPECT_EQ(interval[1], 4);
 }
