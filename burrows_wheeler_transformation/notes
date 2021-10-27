@@ -1,0 +1,171 @@
+ex1:
+ababc
+cabab
+bcaba
+abcab
+babca
+
+ababc
+abcab
+babca
+bcaba
+cabab
+
+ababc a
+abcab a
+babca b
+bcaba b
+cabab c
+
+ex2:
+abcba
+aabcb
+baabc
+cbaab
+bcbaa
+
+aabcb a
+abcba a<-
+baabc b
+bcbaa b
+cbaab c
+
+ex3:
+acaaba
+aacaab
+baacaa
+abaaca
+aabaac
+caabaa
+
+aabaac a
+aacaab a
+abaaca a
+acaaba a<-
+baacaa b
+caabaa c
+
+aabaac
+
+ex4:
+abaaca
+aabaac
+caabaa
+acaaba
+aacaab
+baacaa
+
+aabaac a
+aacaab a
+abaaca a<-
+acaaba a
+baacaa b
+caabaa c
+
+a..c
+a..b
+a..a<-
+a..a
+b..a
+c..a
+
+becomes
+a..c
+a..b
+a..a<-
+ac..a
+b..a
+
+becmoes
+a..c
+a..b
+ab..a<-
+ac..a
+
+becomes
+aab..c
+aac..b
+ab..a<-
+
+becomes
+aacaab..b
+ab..a<-
+
+
+ex5:
+acabaa
+aacaba
+aaacab
+baaaca
+abaaac
+cabaaa
+
+aaacab a
+aacaba a
+abaaac a
+acabaa a<-
+baaaca b
+cabaaa c
+
+ex6:
+abba
+aabb
+baab
+bbaa
+
+aabb a
+abba a<-
+baab b
+bbaa b
+
+a..b
+a..a<-
+b..b
+a..b
+
+The solution is to draw the last one, attach the last fitting one
+
+ex7:
+baaa
+abaa
+aaba
+aaab
+
+aaab a
+aaba a
+abaa a
+baaa b<-
+
+ex8:
+aacaca
+aaacac
+caaaca
+acaaac
+cacaaa
+acacaa
+
+aaacac a
+aacaca a<-
+acaaac a
+acacaa a
+caaaca c
+cacaaa c
+
+aacaca aacaca<-
+
+ex9
+aabacb
+baabac
+cbaaba
+acbaab
+bacbaa
+abacba
+
+aabacb<--
+abacba
+acbaab
+baabac
+bacbaa
+cbaaba
+
+b..aabacb
