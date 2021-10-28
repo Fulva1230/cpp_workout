@@ -27,33 +27,32 @@ std::pair<std::string, int> encode(const std::string &s) {
 }
 
 std::string decode(const std::string &s, int n) {
+  if(s == ""){
+    return "";
+  }
+
   auto str_size = std::size(s);
-  std::deque<std::pair<std::string, std::string>> table;
+  std::vector<std::string> table;
   auto sorted_str = s;
   std::sort(sorted_str.begin(), sorted_str.end());
   for (int i = 0; i < str_size; ++i) {
-    table.emplace_back(std::string{s[i]}, std::string{sorted_str[i]});
-  }
-//  Try always pop front and find the immediate next fitting one
-  while (std::size(table) > 1) {
-    char cur_char = table[0].first[0];
-    auto found_concat_iter =
-        std::find_if(std::next(table.begin()), table.end(), [&](auto pair) {
-          auto concat_condidate = pair.second;
-          return concat_condidate[std::size(concat_condidate) - 1] == cur_char;
-        });
-    found_concat_iter->second = found_concat_iter->second + table[0].second;
-    table.pop_front();
+    table.emplace_back(std::string{s[i], sorted_str[i]});
   }
 
-  auto wrong_permutation = table[0].second;
-  std::vector<std::string> to_sort_vec;
-  to_sort_vec.reserve(str_size);
-  for (int i = 0; i < std::size(wrong_permutation); ++i) {
-    to_sort_vec.emplace_back(wrong_permutation.substr(i) + wrong_permutation.substr(0, i));
+  for (int i = 1; i < str_size; ++i) {
+    auto temp_table = table;
+    while (!temp_table.empty()) {
+      auto end = temp_table.rbegin();
+      auto fit_row = std::find_if(table.rbegin(), table.rend(),
+                                  [&](const std::string &row) {
+                                    return row.substr(1) == end->substr(0, i);
+                                  });
+      *fit_row = *fit_row + end->substr(i);
+      temp_table.pop_back();
+    }
   }
-  std::sort(to_sort_vec.begin(), to_sort_vec.end());
-  return to_sort_vec[n];
+
+  return table[n].substr(1);
 }
 
 TEST(burrows_wheeler_transformation, test_encode) {
@@ -64,7 +63,7 @@ TEST(burrows_wheeler_transformation, test_encode) {
   std::pair<std::string, int> res3{"ww MYeelllloo", 1};
   EXPECT_EQ(encode("Mellow Yellow"), res3);
 
-//  EXPECT_EQ(decode("nnbbraaaa", 4), "bananabar");
-//  EXPECT_EQ(decode("e emnllbduuHB", 2), "Humble Bundle");
+  EXPECT_EQ(decode("nnbbraaaa", 4), "bananabar");
+  EXPECT_EQ(decode("e emnllbduuHB", 2), "Humble Bundle");
   EXPECT_EQ(decode("ww MYeelllloo", 1), "Mellow Yellow");
 }
