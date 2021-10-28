@@ -34,17 +34,8 @@ std::string decode(const std::string &s, int n) {
   for (int i = 0; i < str_size; ++i) {
     table.emplace_back(std::string{s[i]}, std::string{sorted_str[i]});
   }
-  for (auto i = str_size - 1; i > n; --i) {
-    char cur_char = table[i].first[0];
-    auto found_concat_iter =
-        std::find_if(std::next(table.rbegin()), table.rend(), [&](auto pair) {
-          auto concat_condidate = pair.second;
-          return concat_condidate[std::size(concat_condidate) - 1] == cur_char;
-        });
-    found_concat_iter->second = found_concat_iter->second + table[i].second;
-    table.pop_back();
-  }
-  for (auto i = 0; i < n; ++i) {
+//  Try always pop front and find the immediate next fitting one
+  while (std::size(table) > 1) {
     char cur_char = table[0].first[0];
     auto found_concat_iter =
         std::find_if(std::next(table.begin()), table.end(), [&](auto pair) {
@@ -54,7 +45,15 @@ std::string decode(const std::string &s, int n) {
     found_concat_iter->second = found_concat_iter->second + table[0].second;
     table.pop_front();
   }
-  return table[0].second.substr(0, str_size);
+
+  auto wrong_permutation = table[0].second;
+  std::vector<std::string> to_sort_vec;
+  to_sort_vec.reserve(str_size);
+  for (int i = 0; i < std::size(wrong_permutation); ++i) {
+    to_sort_vec.emplace_back(wrong_permutation.substr(i) + wrong_permutation.substr(0, i));
+  }
+  std::sort(to_sort_vec.begin(), to_sort_vec.end());
+  return to_sort_vec[n];
 }
 
 TEST(burrows_wheeler_transformation, test_encode) {
@@ -66,5 +65,6 @@ TEST(burrows_wheeler_transformation, test_encode) {
   EXPECT_EQ(encode("Mellow Yellow"), res3);
 
 //  EXPECT_EQ(decode("nnbbraaaa", 4), "bananabar");
-  EXPECT_EQ(decode("e emnllbduuHB", 2), "Humble Bundle");
+//  EXPECT_EQ(decode("e emnllbduuHB", 2), "Humble Bundle");
+  EXPECT_EQ(decode("ww MYeelllloo", 1), "Mellow Yellow");
 }

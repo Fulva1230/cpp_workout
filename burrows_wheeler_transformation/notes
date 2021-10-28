@@ -62,34 +62,29 @@ acaaba a
 baacaa b
 caabaa c
 
-a..c
-a..b
-a..a<-
-a..a
-b..a
-c..a
+c a
+a b
+a a<-
+a a
+a b
+a c
 
-becomes
-a..c
-a..b
-a..a<-
-ac..a
-b..a
+c a
+b a
+a a<-
+a a
+a b
+a c
 
-becmoes
-a..c
-a..b
-ab..a<-
-ac..a
+c aa
+b aa
+a ab<-
+a ac
 
-becomes
-aab..c
-aac..b
-ab..a<-
-
-becomes
-aacaab..b
-ab..a<-
+c aa
+b aa
+a ab<-
+a ac
 
 
 ex5:
@@ -169,3 +164,26 @@ bacbaa
 cbaaba
 
 b..aabacb
+
+ex10:
+nnbbraaaa 4
+
+n a
+n a
+b a
+b a
+r b<-
+a b
+a n
+a n
+a r
+
+
+
+prob:
+l l
+l l
+l o
+l o
+o "w Yel"
+o "wMel"
