@@ -26,7 +26,6 @@ void collect_primes(std::map<int, int> &factor_collector, int num) {
   }
 }
 
-// collect too many common factor so f overflows
 int Zeroes(int base, int number) {
   std::map<int, int> factor_collector;
   for (int i = 1; i <= number; ++i) {
@@ -41,6 +40,8 @@ int Zeroes(int base, int number) {
 
   int z = 0;
   auto begin_iter = std::begin(factor_collector);
+//  Since the factor_collector only collects prime numbers, so this part can be improved. First prime factor the base,
+//  and use the base's prime numbers to subtract factor_collector
   while (begin_iter != std::end(factor_collector)) {
     int zero_checker = base;
     auto next_divisor = std::find_if(begin_iter, std::end(factor_collector),
