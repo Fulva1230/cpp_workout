@@ -28,6 +28,7 @@ add_subdirectory(drafting)
 add_subdirectory(magic_compare)
 add_subdirectory(burrows_wheeler_transformation)
 add_subdirectory(range_extraction)
+add_subdirectory(factorial_tail)
 
 add_executable(cpp_workout src/stray_number.cpp src/roman_decoder.cpp src/two_sum.cpp src/camel_string.cpp src/score_a_dice.cpp src/pascal_triangle.cpp src/max_sum.cpp src/scarmblies_string.cpp src/best_travel.cpp src/premutation_string.cpp src/parse_int.cpp src/multiply_string_number.cpp src/string_mix.cpp src/twice_linear.cpp src/explorsive_sum.cpp src/observed_pin.cpp src/multiplication_of_three.cpp src/sudoku_validator.cpp src/pi_comp.cpp)
 target_include_directories(cpp_workout PUBLIC include)

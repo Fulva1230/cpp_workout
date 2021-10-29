@@ -1,0 +1,11 @@
+n(n-1)(n-2)...(1)
+how much zeros in the tail
+if base b=3
+
+is n(n-1)(n-2)...(1) / b^p == 0?
+
+24 7
+4
+
+7 14 21 28 35 42 49
+1 1 1 1 1 1 1
