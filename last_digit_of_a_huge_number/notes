@@ -1,0 +1,24 @@
+3 ^ (4 ^ 2) = 3 ^ 16 = 43046721
+
+x1 ^ (x2 ^ (x3 ^ (... ^ xn)))
+
+
+
+(x1 ^ (x2 ^ x3)) = x1 ^ (x2 ^ (x3/2) * x2 ^ (x3 - x3/2)) = (x1 ^ (x2 ^ (x3/2))) ^ (x2 ^ (x3 - x3/2))
+
+
+(x1 ^ (x2 ^ x3)) = 10 * x + y
+
+We only concern the value of y
+
+Assume we have y for the following
+x1 ^ (x2 ^ x3) = s * x + y
+
+x1 = s * x + y
+We may find a x2 such that
+x1 ^ x2 = (s * x + y) ^ x2 = s * x' + y
+
+3 4 2
+10 4 1
+
+0
