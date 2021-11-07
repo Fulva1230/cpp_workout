@@ -15,7 +15,7 @@ enum class SpecType { MAXIMUM, MODULE };
 
 struct Spec {
   SpecType type = SpecType::MODULE;
-  int value = INT_MAX;
+  int value = 0;
 };
 
 int my_pow(int x, unsigned int p) {
@@ -33,8 +33,11 @@ int my_pow(int x, unsigned int p) {
 
 Spec get_power_spec(int base, Spec base_spec) {
   if (base_spec.type == SpecType::MAXIMUM) {
-    int agg_mul = base;
-    for (int i = 2;; ++i) {
+    if (base == 0 || base == 1) {
+      return {SpecType::MODULE, 1};
+    }
+    int agg_mul = 1;
+    for (int i = 1;; ++i) {
       agg_mul *= base;
       if (agg_mul >= base_spec.value) {
         return {SpecType::MAXIMUM, i};
@@ -73,6 +76,13 @@ int last_digit(int base, list<int> powers, Spec base_spec) {
     int power = last_digit(
         powers.front(), std::list<int>(std::next(powers.begin()), powers.end()),
         power_spec);
+    if (base == 0) {
+      if (power == 0) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
     if (power_spec.type == SpecType::MAXIMUM && power == power_spec.value) {
       return base_spec.value;
     } else {
@@ -86,7 +96,6 @@ int last_digit(int base, list<int> powers, Spec base_spec) {
 }
 
 int last_digit(list<int> array) {
-  std::cout << array.front() << std::endl;
   if (array.empty()) {
     return 1;
   }
@@ -101,15 +110,16 @@ int last_digit(list<int> array) {
   }
 }
 
-TEST(LastDigitOfAHugeNumber, TestCycleNum) {
-}
+TEST(LastDigitOfAHugeNumber, TestCycleNum) {}
 
 TEST(LastDigitOfAHugeNumber, TestLastDeigit) {
-    EXPECT_EQ(last_digit({1, 2}), 1);
-    EXPECT_EQ(last_digit({3, 4, 2}), 1);
-    EXPECT_EQ(last_digit({12, 30, 21}), 6);
-    EXPECT_EQ(last_digit({7, 6, 21}), 1);
-    EXPECT_EQ(last_digit({499942,898102,846073}),  6);
-    EXPECT_EQ(last_digit({0,0,0}),    0);
+  EXPECT_EQ(last_digit({1, 2}), 1);
+  EXPECT_EQ(last_digit({3, 4, 2}), 1);
+  EXPECT_EQ(last_digit({12, 30, 21}), 6);
+  EXPECT_EQ(last_digit({7, 6, 21}), 1);
+  EXPECT_EQ(last_digit({499942, 898102, 846073}), 6);
+  EXPECT_EQ(last_digit({0, 0, 0}), 0);
   EXPECT_EQ(last_digit({0, 0}), (1));
+  EXPECT_EQ(last_digit({3, 2, 0, 0, 2, 0}), 9);
+  EXPECT_EQ(last_digit({3, 2, 0, 0, 0}), 3);
 }
