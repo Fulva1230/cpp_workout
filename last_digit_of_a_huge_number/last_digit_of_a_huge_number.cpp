@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <limits>
 #include <list>
 #include <unordered_map>
 
@@ -10,18 +11,12 @@
 
 using namespace std;
 
-int power_cycle_num(int base, int module) {
-  int i = 2;
-  int remaining = base % module;
-  int power = base * base;
-  int power_remaining = power % module;
-  while (power_remaining != remaining) {
-    ++i;
-    power *= base;
-    power_remaining = power % module;
-  }
-  return i-1;
-}
+enum class SpecType { MAXIMUM, MODULE };
+
+struct Spec {
+  SpecType type = SpecType::MODULE;
+  int value = INT_MAX;
+};
 
 int my_pow(int x, unsigned int p) {
   if (p == 0)
@@ -36,38 +31,85 @@ int my_pow(int x, unsigned int p) {
     return x * tmp * tmp;
 }
 
+Spec get_power_spec(int base, Spec base_spec) {
+  if (base_spec.type == SpecType::MAXIMUM) {
+    int agg_mul = base;
+    for (int i = 2;; ++i) {
+      agg_mul *= base;
+      if (agg_mul >= base_spec.value) {
+        return {SpecType::MAXIMUM, i};
+      }
+    }
+  } else {
+    int agg_mul = base;
+    int remaining = base % base_spec.value;
+    for (int i = 2;; ++i) {
+      agg_mul *= base;
+      if (agg_mul % base_spec.value == remaining) {
+        return {SpecType::MODULE, i - 1};
+      }
+      if (agg_mul % base_spec.value == 0) {
+        return {SpecType::MAXIMUM, i};
+      }
+    }
+  }
+}
+
+int last_digit(int base, list<int> powers, Spec base_spec) {
+  if (base_spec.type == SpecType::MODULE && base != 0) {
+    base = (base - 1) % base_spec.value + 1;
+  }
+  if (std::size(powers) == 0) {
+    if (base == 0) {
+      return 0;
+    }
+    if (base_spec.type == SpecType::MODULE) {
+      return (base - 1) % base_spec.value + 1;
+    } else if (base_spec.type == SpecType::MAXIMUM) {
+      return (base_spec.value > base) ? base : base_spec.value;
+    }
+  } else {
+    Spec power_spec = get_power_spec(base, base_spec);
+    int power = last_digit(
+        powers.front(), std::list<int>(std::next(powers.begin()), powers.end()),
+        power_spec);
+    if (power_spec.type == SpecType::MAXIMUM && power == power_spec.value) {
+      return base_spec.value;
+    } else {
+      if (base_spec.type == SpecType::MODULE) {
+        return (my_pow(base, power) - 1) % base_spec.value + 1;
+      } else {
+        return my_pow(base, power);
+      }
+    }
+  }
+}
+
 int last_digit(list<int> array) {
-  std::vector<int> cycle_array;
-  cycle_array.push_back(10);
-  int i = 0;
-  for (auto cur_iter = std::begin(array);
-       cur_iter != std::end(array); ++cur_iter, ++i) {
-    cycle_array.push_back(power_cycle_num(*cur_iter, cycle_array[i]));
+  std::cout << array.front() << std::endl;
+  if (array.empty()) {
+    return 1;
   }
 
-  auto cur_iter_r = array.rbegin();
-  auto end_iter_r = array.rend();
-  auto cur_cycle_array_iter_r = std::next(cycle_array.rbegin());
-  int power = (*cur_iter_r-1) % *cur_cycle_array_iter_r + 1;
-  ++cur_iter_r;
-  ++cur_cycle_array_iter_r;
-  for (; cur_iter_r != end_iter_r;
-       ++cur_iter_r, ++cur_cycle_array_iter_r) {
-    int reduced_base = (*cur_iter_r-1) % *cur_cycle_array_iter_r + 1;
-    power = (my_pow(reduced_base, power)-1) % *cur_cycle_array_iter_r + 1;
+  int res = last_digit(array.front(),
+                       std::list<int>(std::next(array.begin()), array.end()),
+                       {SpecType::MODULE, 10});
+  if (res == 10) {
+    return 0;
+  } else {
+    return res;
   }
-  return power;
 }
 
 TEST(LastDigitOfAHugeNumber, TestCycleNum) {
-  EXPECT_EQ(power_cycle_num(2, 10), 4);
-  EXPECT_EQ(power_cycle_num(3, 10), 4);
-  EXPECT_EQ(power_cycle_num(9, 10), 2);
 }
 
 TEST(LastDigitOfAHugeNumber, TestLastDeigit) {
-//  EXPECT_EQ(last_digit({1,2}), 1);
-//  EXPECT_EQ(last_digit({3, 4, 2}), 1);
-//  EXPECT_EQ(last_digit({12,30,21}), 6);
-  EXPECT_EQ(last_digit({7,6,21}),   1);
+    EXPECT_EQ(last_digit({1, 2}), 1);
+    EXPECT_EQ(last_digit({3, 4, 2}), 1);
+    EXPECT_EQ(last_digit({12, 30, 21}), 6);
+    EXPECT_EQ(last_digit({7, 6, 21}), 1);
+    EXPECT_EQ(last_digit({499942,898102,846073}),  6);
+    EXPECT_EQ(last_digit({0,0,0}),    0);
+  EXPECT_EQ(last_digit({0, 0}), (1));
 }
