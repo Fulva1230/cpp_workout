@@ -33,11 +33,14 @@ std::vector<int> the_lift(const std::vector<std::vector<int>> &queues,
     }
     auto &current_queue = queues_copy[current_floor];
     for (auto iter = current_queue.begin(); iter != current_queue.end();) {
-      if ((*iter - current_floor) * current_direction > 0 &&
-          lift_content.size() < capacity) {
-        lift_content.insert(*iter);
-        iter = current_queue.erase(iter);
+      if ((*iter - current_floor) * current_direction > 0) {
         should_stop = true;
+        if (lift_content.size() < capacity) {
+          lift_content.insert(*iter);
+          iter = current_queue.erase(iter);
+        } else {
+          break;
+        }
       } else {
         ++iter;
       }
