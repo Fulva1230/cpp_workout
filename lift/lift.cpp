@@ -27,6 +27,11 @@ std::vector<int> the_lift(const std::vector<std::vector<int>> &queues,
   int current_floor = 0;
   int current_direction = 1;
   while (is_anyone_waiting(queues_copy) || !lift_content.empty()) {
+    if (current_floor == queues_copy.size() - 1) {
+      current_direction = -1;
+    } else if (current_floor == 0) {
+      current_direction = 1;
+    }
     bool should_stop = false;
     if (lift_content.erase(current_floor) > 0) {
       should_stop = true;
@@ -48,15 +53,13 @@ std::vector<int> the_lift(const std::vector<std::vector<int>> &queues,
     if (should_stop) {
       stops.push_back(current_floor);
     }
-    if (current_floor == queues_copy.size() - 1 && current_direction == 1) {
-      current_direction = -1;
-    } else if (current_floor == 0 && current_direction == -1) {
-      current_direction = 1;
-    }
     current_floor += current_direction;
   }
   if (*std::prev(stops.end()) != 0) {
     stops.push_back(0);
+  }
+  if (stops.size() > 1 && *std::next(stops.begin()) == 0) {
+    stops.erase(stops.begin());
   }
   return stops;
 }
