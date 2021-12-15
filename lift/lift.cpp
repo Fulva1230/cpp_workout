@@ -50,16 +50,13 @@ std::vector<int> the_lift(const std::vector<std::vector<int>> &queues,
         ++iter;
       }
     }
-    if (should_stop) {
+    if (should_stop && *std::prev(stops.end()) != current_floor) {
       stops.push_back(current_floor);
     }
     current_floor += current_direction;
   }
   if (*std::prev(stops.end()) != 0) {
     stops.push_back(0);
-  }
-  if (stops.size() > 1 && *std::next(stops.begin()) == 0) {
-    stops.erase(stops.begin());
   }
   return stops;
 }
